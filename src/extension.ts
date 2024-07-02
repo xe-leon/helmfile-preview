@@ -20,7 +20,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   vscode.workspace.onDidSaveTextDocument(
     async (doc) => {
-      HelmfileTemplateFileProvider.render(doc.uri.fsPath);
+      if (doc.uri.fsPath === HelmfileTemplateFileProvider.currentlyRendered)
+        HelmfileTemplateFileProvider.render(doc.uri.fsPath);
     }
   );
   // vscode.window.onDidChangeActiveTextEditor(
