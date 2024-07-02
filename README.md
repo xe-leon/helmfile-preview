@@ -10,19 +10,19 @@ Generally based on [helm-template-preview-and-more](https://github.com/Nestsiare
 
 * Render currently opened helmfile, or just let it render the first helmfile it'll find.
 
-<img src="media/demo/helmfile-command.gif" width="800" alt="Open preview via command palette">
+![Open preview via command palette](media/demo/helmfile-command.gif)
 
 * You can also use a button right in the editor.
 
-<img src="media/demo/helmfile-button.png" width="800" alt="Open preview with button">
+![Open preview with button](media/demo/helmfile-button.png)
 
 * Preview is being updated every time helmfile is saved.
 
-<img src="media/demo/helmfile-realtime-update.gif" width="800" alt="Auto update">
+![Auto update](media/demo/helmfile-realtime-update.gif)
 
 * If you want to be more precise, you can open a sidemenu to choose specific environment and set a selector. Multiple opened directories supported.
 
-<img src="media/demo/helmfile-sidebar.gif" width="800" alt="Precise settings in sidebar">
+![Precise settings in sidebar](media/demo/helmfile-sidebar.gif)
 
 ## Requirements
 
