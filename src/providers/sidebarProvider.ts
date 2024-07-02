@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
-import { findHelmfiles, findEnvironments } from '../utilities/fsHelpers';
+import { findHelmfiles, findEnvironments, getCustomHelmfiles } from '../utilities/fsHelpers';
 import HelmfileTemplateFileProvider from "../providers/helmfileTemplateFileProvider";
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
@@ -50,7 +50,15 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   public async _editorChange(editor?: vscode.TextEditor) {
     if (!this._view) return;
 
-    const mapHelmfiles = await findHelmfiles();
+    let mapHelmfiles = await findHelmfiles();
+    if(vscode.workspace.workspaceFolders){
+      vscode.workspace.workspaceFolders.forEach(workspaceFolder => {
+        const customHelmfiles = getCustomHelmfiles(workspaceFolder.uri.fsPath+"/");
+        if (customHelmfiles) {
+          mapHelmfiles = new Map<string, string>([...mapHelmfiles.entries(), ...customHelmfiles.entries()]);
+        }
+      });
+    }
 
     const helmfiles = JSON.stringify(Object.fromEntries(mapHelmfiles));
     const selectedFile = editor?.document.uri.fsPath;

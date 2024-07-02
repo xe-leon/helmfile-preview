@@ -8,13 +8,16 @@
     "helmfile",
     "helmfile-template"
   ],
-  "version": "1.0.2",
+  "version": "1.1.0",
   "license": "LICENSE.md",
   "icon": "media/helmfile.png",
   "engines": {
     "vscode": "^1.75.0"
   },
-  "activationEvents": ["onLanguage:yaml", "workspaceContains:**/helmfile.yaml"],
+  "activationEvents": [
+    "onLanguage:yaml",
+    "workspaceContains:**/helmfile.yaml"
+  ],
   "main": "./out/extension.js",
   "repository": {
     "type": "git",
@@ -69,7 +72,7 @@
       {
         "title": "Helmfile Template",
         "properties": {
-          "helmfile-preview.file-names": {
+          "helmfile-preview.fileNames": {
             "order": 0,
             "type": "array",
             "items": {
@@ -80,8 +83,17 @@
             ],
             "description": "Names of files that will be automatically searched as helmfile"
           },
-          "helmfile-preview.file-exts": {
+          "helmfile-preview.customNameFilter": {
             "order": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [],
+            "description": "Filters for custom-named helmfiles. GitIgnore syntax supported, for example: helmfiles/*.yaml"
+          },
+          "helmfile-preview.fileExtensions": {
+            "order": 2,
             "type": "array",
             "items": {
               "type": "string"
@@ -93,18 +105,18 @@
             "description": "Extensions of files that are counted as helmfile"
           },
           "helmfile-preview.environment": {
-            "order": 2,
+            "order": 3,
             "type": "string",
             "default": "default",
             "description": "Default environment to choose"
           },
-          "helmfile-preview.exec-helmfile": {
+          "helmfile-preview.helmfileExecutable": {
             "order": 98,
             "type": "string",
             "default": "helmfile",
             "description": "Path to `helmfile` executable"
           },
-          "helmfile-preview.exec-helm": {
+          "helmfile-preview.helmExecutable": {
             "order": 99,
             "type": "string",
             "default": "helm",
@@ -137,6 +149,7 @@
   },
   "dependencies": {
     "@vscode/codicons": "^0.0.36",
-    "@vscode/webview-ui-toolkit": "^1.2.2"
+    "@vscode/webview-ui-toolkit": "^1.2.2",
+    "ignore": "^5.3.1"
   }
 }

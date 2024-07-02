@@ -2,7 +2,34 @@ import * as vscode from 'vscode';
 import * as path from "path";
 import * as fs from 'fs';
 import * as yaml from 'yaml';
+import ignore, { Ignore } from 'ignore';
 import ConfigurationProvider from "../providers/configurationProvider";
+
+export function getCustomHelmfiles(rootDir: string): Map<string, string> | undefined {
+  const ignoreTemplates = ConfigurationProvider.getConfigNamesFilter();
+  if (!ignoreTemplates) return undefined;
+
+  const customHelmfiles = getFilesFiltered(rootDir, ignore().add(ignoreTemplates), rootDir);
+
+  return new Map(customHelmfiles.map(file => [stripFolderPath(file), file]));
+}
+
+function getFilesFiltered(rootPath: string, ig: Ignore, igRootDir: string, fileList: string[] = []) {
+  const files = fs.readdirSync(rootPath);
+
+  files.forEach((file) => {
+      const filePath = path.join(rootPath, file);
+      if (fs.statSync(filePath).isDirectory()) {
+        getFilesFiltered(filePath, ig, igRootDir, fileList);
+      } else {
+        if (ig.ignores(filePath.replace(igRootDir, ""))){
+          fileList.push(filePath);
+        }
+      }
+  });
+
+  return fileList;
+}
 
 export function findEnvironments(filePath: string): string[] {
   const file = fs.readFileSync(filePath, 'utf8');
@@ -17,7 +44,6 @@ export function findEnvironments(filePath: string): string[] {
       });
     }
   });
-
   return environments;
 }
 
@@ -37,8 +63,8 @@ export async function findHelmfiles(): Promise<Map<string, string>> {
   return filePaths;
 }
 
-export function stripFolderPath(fsPath: string): string {
-  const folders = getWorkspaceFolders();
+function stripFolderPath(fsPath: string): string {
+  const folders = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath);
   if (!folders) return fsPath;
 
   const containingFolder = folders.filter(element => fsPath.includes(element));
@@ -46,11 +72,10 @@ export function stripFolderPath(fsPath: string): string {
 
   if (!containingFolder) return fsPath;
 
-  return fsPath.replace(containingFolder[0], path.basename(containingFolder[0]));
-}
+  if (vscode.workspace.workspaceFolders?.length === 1){
+    return fsPath.replace(containingFolder[0]+"/", "");
+  } else {
+    return fsPath.replace(containingFolder[0], path.basename(containingFolder[0]));
+  }
 
-export function getWorkspaceFolders() {
-  return vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath) as
-    | string[]
-    | undefined;
 }

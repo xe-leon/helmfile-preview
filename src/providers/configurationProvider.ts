@@ -4,13 +4,19 @@ export class ConfigurationProvider {
   private static configuration = vscode.workspace.getConfiguration("helmfile-preview");
 
   public static getConfigNames() {
-    return ConfigurationProvider.configuration.get("file-names") as
+    return ConfigurationProvider.configuration.get("fileNames") as
       | string[]
       | undefined;
   }
 
   public static getConfigExtensions() {
-    return ConfigurationProvider.configuration.get("file-exts") as
+    return ConfigurationProvider.configuration.get("fileExtensions") as
+      | string[]
+      | undefined;
+  }
+
+  public static getConfigNamesFilter() {
+    return ConfigurationProvider.configuration.get("customNameFilter") as
       | string[]
       | undefined;
   }
@@ -22,13 +28,13 @@ export class ConfigurationProvider {
   }
 
   public static getConfigHelmfileBinary() {
-    return ConfigurationProvider.configuration.get("exec-helmfile") as
+    return ConfigurationProvider.configuration.get("helmfileExecutable") as
       | string
       | "helmfile";
   }
 
   public static getConfigHelmBinary() {
-    let helmBinary = ConfigurationProvider.configuration.get("exec-helm") as
+    let helmBinary = ConfigurationProvider.configuration.get("helmExecutable") as
       | string
       | undefined;
 
