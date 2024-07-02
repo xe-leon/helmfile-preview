@@ -1,0 +1,141 @@
+{
+  "name": "helmfile-preview",
+  "displayName": "Helmfile Preview",
+  "description": "Render and preview your helmfiles with different environments",
+  "publisher": "Evgenii Domashenkin",
+  "keywords": [
+    "helm",
+    "helmfile",
+    "helmfile-template"
+  ],
+  "version": "1.0.0",
+  "license": "LICENSE.md",
+  "icon": "./media/helmfile.png",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "main": "./out/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xe-leon/helmfile-preview"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "helmfile-preview.openCurrentPreview",
+        "category": "Helmfile",
+        "title": "Render current file preview",
+        "icon": {
+          "light": "./media/icon-light.svg",
+          "dark": "./media/icon-dark.svg"
+        }
+      },
+      {
+        "command": "helmfile-preview.findFirstAndPreview",
+        "category": "Helmfile",
+        "title": "Find helmfile in workspace and render preview"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "helmfile-preview.openCurrentPreview",
+          "when": "resourcePath =~ /\\S+\\.(yaml|yml)/ && !(resourcePath =~ /.*templates.*/)",
+          "group": "navigation"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "helmfile-preview-sidebar",
+          "title": "Helmfile Preview",
+          "icon": "images/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "helmfile-preview-sidebar": [
+        {
+          "type": "webview",
+          "id": "helmfile-preview-sidebar",
+          "name": "Template",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "configuration": [
+      {
+        "title": "Helmfile Template",
+        "properties": {
+          "helmfile-preview.file-names": {
+            "order": 0,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              "helmfile"
+            ],
+            "description": "Names of files that will be automatically searched as helmfile"
+          },
+          "helmfile-preview.file-exts": {
+            "order": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              ".yaml",
+              ".yml"
+            ],
+            "description": "Extensions of files that are counted as helmfile"
+          },
+          "helmfile-preview.environment": {
+            "order": 2,
+            "type": "string",
+            "default": "default",
+            "description": "Default environment to choose"
+          },
+          "helmfile-preview.exec-helmfile": {
+            "order": 98,
+            "type": "string",
+            "default": "helmfile",
+            "description": "Path to `helmfile` executable"
+          },
+          "helmfile-preview.exec-helm": {
+            "order": 99,
+            "type": "string",
+            "default": "helm",
+            "description": "Path to `helm` executable"
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "node ./esbuild.js",
+    "package": "NODE_ENV=production node ./esbuild.js",
+    "watch": "node ./esbuild.js --watch",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "@types/vscode-webview": "^1.57.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "esbuild": "^0.16.10",
+    "eslint": "^8.26.0",
+    "glob": "^8.0.3",
+    "prettier": "^2.8.1",
+    "typescript": "^4.8.4",
+    "yaml": "^2.4.5"
+  },
+  "dependencies": {
+    "@vscode/codicons": "^0.0.36",
+    "@vscode/webview-ui-toolkit": "^1.2.2"
+  }
+}
