@@ -15,6 +15,7 @@ export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentP
   public static scheme = "htvf";
   public static stateEnvironment = "";
   public static stateSelectors = "";
+  public static currentlyRendered = "";
   public fileUri = vscode.Uri.parse(`${HelmfileTemplateFileProvider.scheme}:helmfile`);
 
   provideTextDocumentContent(uri: vscode.Uri, __: vscode.CancellationToken): vscode.ProviderResult<string> {
@@ -78,7 +79,7 @@ export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentP
       console.log(`helmfile exec command: ${command}`);
 
       const stdout = execSync(command);
-
+      HelmfileTemplateFileProvider.currentlyRendered = helmFileAbsPath;
       return { stdout };
     } catch (e) {
       return e as { stdout: Buffer; stderr: Buffer };

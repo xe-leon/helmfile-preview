@@ -62,6 +62,10 @@ I'm not a typescript programmer, so the code might be inefficient, weird or not-
 
 ## Release Notes
 
+### 1.0.2
+
+Fix rendering any files that wasn't rendered before, including non-yaml files
+
 ### 1.0.1
 
 Fix images in readme for VSCode Marketplace
