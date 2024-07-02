@@ -1,6 +1,9 @@
 # Helmfile Preview
 
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
+![GitHub Release](https://img.shields.io/github/v/release/xe-leon/helmfile-preview?include_prereleases&sort=semver&label=GitHub%20Release)
+![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/xe-leon-tools.helmfile-preview?label=Marketplace%20version)
+![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/xe-leon-tools.helmfile-preview)
 
 This extension renders your helmfile with chosen environment.
 
