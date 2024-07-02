@@ -42,13 +42,14 @@ To run any command, open command palette: `Ctrl` + `Shift` + `P` (Windows) / `Sh
 
 This extension contributes the following settings:
 
-| **Parameter**                    | **Description**                                                       | **Default value** |
-|----------------------------------|-----------------------------------------------------------------------|-------------------|
-| `helmfile-preview.file-names`    | Names of files that will be automatically searched as helmfile        | `helmfile`        |
-| `helmfile-preview.file-exts`     | Extensions of files that are counted as helmfile                      | `*.yaml,*.yml`    |
-| `helmfile-preview.environment`   | Default environment to choose                                         | `default`         |
-| `helmfile-preview.exec-helmfile` | Path to `helmfile` executable                                         | `helmfile`        |
-| `helmfile-preview.exec-helm`     | Path to `helm` executable                                             | `helm`            |
+| **Parameter**                         | **Description**                                                       | **Default value** |
+|---------------------------------------|-----------------------------------------------------------------------|-------------------|
+| `helmfile-preview.fileNames`          | Names of files that will be automatically searched as helmfile        | `helmfile`        |
+| `helmfile-preview.customNameFilter`   | Filters for custom Helmfile names (GitIgnore syntax)                  |                   |
+| `helmfile-preview.fileExtensions`     | Extensions of files that are counted as helmfile                      | `*.yaml,*.yml`    |
+| `helmfile-preview.environment`        | Default environment to choose                                         | `default`         |
+| `helmfile-preview.helmfileExecutable` | Path to `helmfile` executable                                         | `helmfile`        |
+| `helmfile-preview.helmExecutable`     | Path to `helm` executable                                             | `helm`            |
 
 ## Contribute
 
@@ -58,9 +59,20 @@ I'm not a typescript programmer, so the code might be inefficient, weird or not-
 
 ## TODO
 
-* Support for entire directories of helmfiles with different names.
-
 ## Release Notes
+
+### 1.1.0
+
+* **Feature**: Strip workspace folder from filenames in sidebar selector if there's only 1 opened workspace folder.
+
+* **Feature**: Implement support `gitignore` syntax for custom helmfile names.
+
+You can specify directory or filename masks. Set your masks in configuration.
+
+Example:
+
+1. `clusters/*staging*.yaml`: Use all files that are in "clusters" folder of workspace and contain "staging" in filename.
+2. `clusters/**.yaml`: Use all files in "cluster" folder, including files in subdirectories.
 
 ### 1.0.2
 
