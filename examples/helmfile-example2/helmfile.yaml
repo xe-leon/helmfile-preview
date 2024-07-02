@@ -1,0 +1,7 @@
+environments:
+  default:
+
+---
+bases:
+  - releases/prometheus.yaml
+  - releases/traefik.yaml

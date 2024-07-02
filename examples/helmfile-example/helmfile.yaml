@@ -1,0 +1,9 @@
+environments:
+  aws.production:
+  aws.staging:
+  aws.dev:
+
+---
+bases:
+  - releases/prometheus.yaml
+  - releases/traefik.yaml

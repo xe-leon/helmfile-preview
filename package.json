@@ -2,7 +2,7 @@
   "name": "helmfile-preview",
   "displayName": "Helmfile Preview",
   "description": "Render and preview your helmfiles with different environments",
-  "publisher": "Evgenii Domashenkin",
+  "publisher": "xe-leon-tools",
   "keywords": [
     "helm",
     "helmfile",
@@ -10,10 +10,11 @@
   ],
   "version": "1.0.0",
   "license": "LICENSE.md",
-  "icon": "./media/helmfile.png",
+  "icon": "media/helmfile.png",
   "engines": {
     "vscode": "^1.75.0"
   },
+  "activationEvents": ["onLanguage:yaml", "workspaceContains:**/helmfile.yaml"],
   "main": "./out/extension.js",
   "repository": {
     "type": "git",
