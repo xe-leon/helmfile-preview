@@ -1,0 +1,9 @@
+repositories:
+  - name: prometheus
+    url: https://prometheus-community.github.io/helm-charts
+
+releases:
+  - name: prometheus-common
+    namespace: monitoring
+    chart: prometheus/prometheus
+    installed: true
