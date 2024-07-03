@@ -11,21 +11,39 @@ Generally based on [helm-template-preview-and-more](https://github.com/Nestsiare
 
 ## Features
 
-* Render currently opened helmfile, or just let it render the first helmfile it'll find.
+### Run a command
+Render currently opened helmfile, or just let it find helmfile and render it.
 
 ![Open preview via command palette](media/demo/helmfile-command.gif)
 
-* You can also use a button right in the editor.
+### Press the button
+
+You can also use a button right in the editor.
 
 ![Open preview with button](media/demo/helmfile-button.png)
 
-* Preview is being updated every time helmfile is saved.
+### Auto-updated preview
+
+Preview is being updated every time helmfile is saved.
+
+In case you've changed some other connected files except helmfile itself, use sidebar button to update preview.
 
 ![Auto update](media/demo/helmfile-realtime-update.gif)
 
-* If you want to be more precise, you can open a sidemenu to choose specific environment and set a selector. Multiple opened directories supported.
+### Sidebar with settings
+
+If you want to be more precise, you can open a sidebar to choose specific environment and set a selector. Multiple opened workspace folders are supported.
 
 ![Precise settings in sidebar](media/demo/helmfile-sidebar.gif)
+
+### Filters for non-default named helmfiles
+
+You can specify filter for filenames or whole folders in `helmfile-preview.customNameFilter` setting. They will appear in sidebar selector.
+
+Example:
+
+1. `clusters/*staging*.yaml`: Show all files that are in "clusters" folder of workspace root and contain "staging" in filename.
+2. `clusters/**.yaml`: Show all files in "cluster" folder, including files in subfolders.
 
 ## Requirements
 
@@ -37,9 +55,9 @@ You need to have both [helmfile](https://helmfile.readthedocs.io/en/latest/#inst
 
 To run any command, open command palette: `Ctrl` + `Shift` + `P` (Windows) / `Shift` + `Command` + `P` (Mac).
 
-* `Helmfile: Render current file preview`: Render currently open helmfile in separate tab.
+* `Helmfile: Render current file preview`: Preview of currently open helmfile in separate tab. Environment will be asked (optional).
 
-* `Helmfile: Find helmfile in workspace and render preview`: Find helmfile in current workspace and open its render.
+* `Helmfile: Find helmfile in workspace and render preview`: Find helmfile in current workspace and open its preview.
 
 ## Extension Settings
 
@@ -56,43 +74,12 @@ This extension contributes the following settings:
 
 ## Contribute
 
-Feel free to open an issue or make a pull request.
+Feel free to open an an issue or make a pull request.
 
-I'm not a typescript programmer, so the code might be inefficient, weird or not-in-best-practice-way.
+I'm not a typescript programmer, so the code might be inefficient, weird or not-in-the-best-practice-way.
 
 ## TODO
 
 ## Release Notes
 
-### 1.1.1
-
-* **Feature**: Close preview when document is closed
-
-* FIX: Invalidate cached render on manual render (button press).
-
-### 1.1.0
-
-* **Feature**: Strip workspace folder from filenames in sidebar selector if there's only 1 opened workspace folder.
-
-* **Feature**: Implement support `gitignore` syntax for custom helmfile names.
-
-You can specify directory or filename masks. Set your masks in configuration.
-
-Example:
-
-1. `clusters/*staging*.yaml`: Use all files that are in "clusters" folder of workspace and contain "staging" in filename.
-2. `clusters/**.yaml`: Use all files in "cluster" folder, including files in subdirectories.
-
-### 1.0.2
-
-Fix rendering any files that wasn't rendered before, including non-yaml files
-
-### 1.0.1
-
-Fix images in readme for VSCode Marketplace
-
-### 1.0.0
-
-Initial release of helmfile preview
-
----
+[Changelog](CHANGELOG.md)
