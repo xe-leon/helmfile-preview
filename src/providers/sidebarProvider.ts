@@ -48,7 +48,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   }
 
   public async _editorChange(editor?: vscode.TextEditor) {
-    if (!this._view) return;
+    if (!this._view) {return;}
 
     let mapHelmfiles = await findHelmfiles();
     if(vscode.workspace.workspaceFolders){
@@ -69,7 +69,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   }
 
   public _envUpdate(helmfiles: Map<string, string>) {
-    if(!this._view) return;
+    if(!this._view) {return;}
 
     let environments = new Set<string>(["default"]);
 
@@ -94,7 +94,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         switch (command) {
           case "render":
-            HelmfileTemplateFileProvider.render(file, env, selectors, prerun);
+            HelmfileTemplateFileProvider.render(file, env, selectors, prerun, getNonce());
             return;
 
           case "selectEnv":

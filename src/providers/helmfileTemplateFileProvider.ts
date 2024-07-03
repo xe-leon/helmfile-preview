@@ -77,22 +77,23 @@ export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentP
     try {
       const command = `${prerun}${helmfileBinary} template --file ${helmFileAbsPath} ${env} ${selectros} ${debug} ${helm}`;
       console.log(`helmfile exec command: ${command}`);
+      HelmfileTemplateFileProvider.currentlyRendered = helmFileAbsPath;
 
       const stdout = execSync(command);
-      HelmfileTemplateFileProvider.currentlyRendered = helmFileAbsPath;
+
       return { stdout };
     } catch (e) {
       return e as { stdout: Buffer; stderr: Buffer };
     }
   }
 
-  public static async render(file: string, env?: string, selectors?: string, prerun?: string) {
+  public static async render(file: string, env?: string, selectors?: string, prerun?: string, random?: string) {
     vscode.window.showInformationMessage(`Rendering helmfile in ${env ? env : "default"} environment`);
 
-    if (!selectors || selectors === "") selectors = undefined;
-    if (!prerun || prerun === "") prerun = undefined;
+    if (!selectors || selectors === "") {selectors = undefined;}
+    if (!prerun || prerun === "") {prerun = undefined;}
 
-    const uri = vscode.Uri.parse(`${HelmfileTemplateFileProvider.scheme}://${file}?environment=${env}&selectors=${selectors}&prerun=${prerun}`);
+    const uri = vscode.Uri.parse(`${HelmfileTemplateFileProvider.scheme}://${file}?environment=${env}&selectors=${selectors}&prerun=${prerun}&random=${random}`);
     const document = await vscode.workspace.openTextDocument(uri);
     await vscode.window.showTextDocument(document, {
       preview: true,
