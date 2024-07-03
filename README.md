@@ -64,6 +64,12 @@ I'm not a typescript programmer, so the code might be inefficient, weird or not-
 
 ## Release Notes
 
+### 1.1.1
+
+* **Feature**: Close preview when document is closed
+
+* FIX: Invalidate cached render on manual render (button press).
+
 ### 1.1.0
 
 * **Feature**: Strip workspace folder from filenames in sidebar selector if there's only 1 opened workspace folder.
