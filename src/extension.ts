@@ -21,7 +21,9 @@ export function activate(context: vscode.ExtensionContext) {
   vscode.workspace.onDidSaveTextDocument(
     async (doc) => {
       if (doc.uri.fsPath === HelmfileTemplateFileProvider.currentlyRendered)
-        HelmfileTemplateFileProvider.(doc.uri.fsPath);
+        {
+          HelmfileTemplateFileProvider.render(doc.uri.fsPath);
+        }
     }
   );
 
