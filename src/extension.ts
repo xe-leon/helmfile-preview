@@ -21,9 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
   vscode.workspace.onDidSaveTextDocument(
     async (doc) => {
       if (doc.uri.fsPath === HelmfileTemplateFileProvider.currentlyRendered)
-        {
-          HelmfileTemplateFileProvider.render(doc.uri.fsPath);
-        }
+        HelmfileTemplateFileProvider.(doc.uri.fsPath);
     }
   );
 
@@ -42,8 +40,8 @@ export function activate(context: vscode.ExtensionContext) {
       await vscode.window.tabGroups.close(previewTab, false);
     }
   });
-  // vscode.window.onDidChangeActiveTextEditor(
   // ! Troubled behavior
+  // vscode.window.onDidChangeActiveTextEditor(
   //   async (e) => {
   //     const uri = vscode.Uri.parse(`${HelmfileTemplateFileProvider.scheme}://${e?.document.uri.fsPath}`);
   //     const document = await vscode.workspace.openTextDocument(uri);
