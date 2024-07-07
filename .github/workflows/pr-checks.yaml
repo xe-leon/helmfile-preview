@@ -1,0 +1,74 @@
+name: Test PRs
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Run ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm install
+      - name: Lint code
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx
+
+  check-version:
+    name: Check version is higher than in master branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Checkout current branch
+        uses: actions/checkout@v4
+        with:
+          path: current
+          sparse-checkout: |
+            package.json
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+          path: base
+          sparse-checkout: |
+            package.json
+          sparse-checkout-cone-mode: false
+
+      - name: Verify versions
+        run: node -e "if (require('./base/package.json').version >= require('./current/package.json').version) { console.log('::error' + 'Version of package is outdated or same as latest. Base = ' + require('./base/package.json').version + ' , Current = ' + require('./current/package.json').version); throw Error('Version invalid')} "
+
+  check-changelog:
+    name: Check changelog is present
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout changelog
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            CHANGELOG.md
+            package.json
+          sparse-checkout-cone-mode: false
+
+      - name: Install yq
+        run: sudo snap install yq
+
+      - name: Get new version
+        id: new-version
+        run: cat package.json | jq '.version' -r
+
+      - name: Ensure changelog for new version if present
+        run: grep ${{ steps.new-version.outputs }} CHANGELOG.md
