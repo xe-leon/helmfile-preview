@@ -49,7 +49,8 @@ Example:
 
 You need to have both [helmfile](https://helmfile.readthedocs.io/en/latest/#installation) and [helm](https://helm.sh/docs/intro/install/) binaries installed in your PATH (or executable specified in settings).
 
-> TIP: If your helmfile references chart in **private** repository, you need to log in with `helm registry login`.
+> [!TIP]
+> If your helmfile references chart in **private** repository, you need to log in with `helm registry login`.
 
 ## Commands
 
