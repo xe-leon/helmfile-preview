@@ -1,0 +1,62 @@
+name: Publish Release
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    name: Publish Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - run: npm install
+
+      - name: Setup Environment Variables
+        run: node -e "console.log('PACKAGE_VERSION=' + require('./package.json').version + '\nPACKAGE_NAME=' + require('./package.json').name + '-' + require('./package.json').version)" >> $GITHUB_ENV
+
+      - name: Verify versions
+        run: node -e "if ('refs/tags/v' + '${{ env.PACKAGE_VERSION }}' !== '${{ github.ref }}') { console.log('::error' + 'Version Mismatch. refs/tags/v' + '${{ env.PACKAGE_VERSION }}', '${{ github.ref }}'); throw Error('Version Mismatch')} "
+
+      - name: Package extension
+        run: vsce package
+
+      - name: Publish Extension
+        uses: lannonbr/vsce-action@3.0.0
+        with:
+          args: "publish --packagePath $PKG -p $VSCE_TOKEN"
+        env:
+          VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+          PKG: "./${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}.vsix"
+
+      - name: Read Changelog
+        id: changelog
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          version: ${{ env.PACKAGE_VERSION }}
+          path: ./CHANGELOG.md
+
+      - name: Create GitHub release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          name: v${{ env.PACKAGE_VERSION }}
+          body: ${{ steps.changelog.outputs.changes }}
+          draft: false
+          prerelease: false
+          files: ./${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}.vsix
