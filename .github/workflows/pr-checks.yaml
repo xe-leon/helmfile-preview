@@ -64,7 +64,7 @@ jobs:
           version: ${{ steps.versions.outputs.current_version }}
           compare-to: ${{ steps.versions.outputs.base_version }}
       - run: |
-          [[ ${{ steps.compare.outputs.comparison-result }} == ">"]]
+          [[ "${{ steps.compare.outputs.comparison-result }}" == ">" ]]
 
   check-changelog:
     name: Check changelog is present
