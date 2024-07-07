@@ -48,8 +48,23 @@ jobs:
             package.json
           sparse-checkout-cone-mode: false
 
-      - name: Verify versions
-        run: node -e "if (require('./base/package.json').version >= require('./current/package.json').version) { console.log('::error' + 'Version of package is outdated or same as latest. Base = ' + require('./base/package.json').version + ' , Current = ' + require('./current/package.json').version); throw Error('Version invalid')} "
+      - name: Install yq
+        run: sudo snap install yq
+
+      - name: Get versions
+        id: versions
+        run: |
+          echo base_version=$(cat ./base/package.json | jq '.version' -r) >> "$GITHUB_OUTPUT"
+          echo current_version=$(cat ./current/package.json | jq '.version' -r) >> "$GITHUB_OUTPUT"
+
+      - name: Compare versions
+        uses: madhead/semver-utils@latest
+        id: compare
+        with:
+          version: ${{ steps.versions.outputs.current_version }}
+          compare-to: ${{ steps.versions.outputs.base_version }}
+      - run: |
+          [[ ${{ steps.compare.outputs.comparison-result }} == ">"]]
 
   check-changelog:
     name: Check changelog is present
