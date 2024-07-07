@@ -48,9 +48,6 @@ jobs:
             package.json
           sparse-checkout-cone-mode: false
 
-      - name: Install yq
-        run: sudo snap install yq
-
       - name: Get versions
         id: versions
         run: |
@@ -77,9 +74,6 @@ jobs:
             CHANGELOG.md
             package.json
           sparse-checkout-cone-mode: false
-
-      - name: Install yq
-        run: sudo snap install yq
 
       - name: Get new version
         id: new-version
