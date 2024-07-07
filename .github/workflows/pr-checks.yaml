@@ -68,7 +68,7 @@ jobs:
 
       - name: Get new version
         id: new-version
-        run: cat package.json | jq '.version' -r
+        run: echo version=$(cat package.json | jq '.version' -r) >> "$GITHUB_OUTPUT"
 
       - name: Ensure changelog for new version if present
-        run: grep ${{ steps.new-version.outputs.stdout }} CHANGELOG.md
+        run: grep ${{ steps.new-version.outputs.version }} CHANGELOG.md
