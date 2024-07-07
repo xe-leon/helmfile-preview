@@ -71,4 +71,4 @@ jobs:
         run: cat package.json | jq '.version' -r
 
       - name: Ensure changelog for new version if present
-        run: grep ${{ steps.new-version.outputs }} CHANGELOG.md
+        run: grep ${{ steps.new-version.outputs.stdout }} CHANGELOG.md
