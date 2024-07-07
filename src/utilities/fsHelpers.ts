@@ -7,7 +7,7 @@ import ConfigurationProvider from "../providers/configurationProvider";
 
 export function getCustomHelmfiles(rootDir: string): Map<string, string> | undefined {
   const ignoreTemplates = ConfigurationProvider.getConfigNamesFilter();
-  if (!ignoreTemplates) return undefined;
+  if (!ignoreTemplates) { return undefined; }
 
   const customHelmfiles = getFilesFiltered(rootDir, ignore().add(ignoreTemplates), rootDir);
 
@@ -51,12 +51,12 @@ export async function findHelmfiles(): Promise<Map<string, string>> {
   const namePatterns = ConfigurationProvider.getConfigNames();
   const extensionPatterns = ConfigurationProvider.getConfigExtensions();
 
-  if (!namePatterns || !extensionPatterns) return new Map<string, string>();
+  if (!namePatterns || !extensionPatterns) { return new Map<string, string>(); }
 
   const globPattern = `**/{${namePatterns.join(",")}}{${extensionPatterns.join(",")}}`;
   const files = await vscode.workspace.findFiles(globPattern);
 
-  if (files.length === 0) return new Map<string, string>();
+  if (files.length === 0) { return new Map<string, string>(); }
 
   const filePaths = new Map(files.map(file => [stripFolderPath(file.fsPath), file.fsPath]));
 
@@ -65,12 +65,12 @@ export async function findHelmfiles(): Promise<Map<string, string>> {
 
 function stripFolderPath(fsPath: string): string {
   const folders = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath);
-  if (!folders) return fsPath;
+  if (!folders) { return fsPath; }
 
   const containingFolder = folders.filter(element => fsPath.includes(element));
   containingFolder.sort((a, b) => b.length - a.length);
 
-  if (!containingFolder) return fsPath;
+  if (!containingFolder) { return fsPath; }
 
   if (vscode.workspace.workspaceFolders?.length === 1){
     return fsPath.replace(containingFolder[0]+"/", "");

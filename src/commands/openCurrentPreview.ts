@@ -3,7 +3,7 @@ import HelmfileTemplateFileProvider from "../providers/helmfileTemplateFileProvi
 
 export async function openCurrentPreview() {
   const currentFileAbsPath = vscode.window.activeTextEditor?.document.uri.fsPath;
-  if(!currentFileAbsPath) return;
+  if(!currentFileAbsPath) { return; }
 
   const answerEnv = await vscode.window.showInputBox({
     prompt: "helmfile environment",
