@@ -69,20 +69,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
   }));
 
-  // vscode.window.onDidChangeActiveTextEditor(
-  // ! Troubled behavior
-  //   async (e) => {
-  //     const uri = vscode.Uri.parse(`${HelmfileTemplateFileProvider.scheme}://${e?.document.uri.fsPath}`);
-  //     const document = await vscode.workspace.openTextDocument(uri);
-  //     await vscode.window.showTextDocument(document, {
-  //       preview: true,
-  //       preserveFocus: true,
-  //       viewColumn: vscode.ViewColumn.Beside
-  //     });
-  //     vscode.languages.setTextDocumentLanguage(document, "yaml");
-  //   }
-  // );
-
   //SidebarProvider
   const sidebarProvider = new SidebarProvider(context.extensionUri);
   context.subscriptions.push(
