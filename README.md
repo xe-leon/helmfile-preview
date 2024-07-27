@@ -81,6 +81,9 @@ I'm not a typescript programmer, so the code might be inefficient, weird or not-
 
 ## TODO
 
+* Fix random close of preview sometimes.
+* Integrate kubeconform.
+
 ## Release Notes
 
 [Changelog](CHANGELOG.md)
