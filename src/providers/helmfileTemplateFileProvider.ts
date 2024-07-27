@@ -75,7 +75,7 @@ export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentP
     const prerun = args.prerun !== "undefined" ? `${args.prerun} && ` : "";
 
     try {
-      const command = `${prerun}${helmfileBinary} template --file ${helmFileAbsPath} ${env} ${selectros} ${debug} ${helm}`;
+      const command = `${prerun}${helmfileBinary} template --args='--no-hooks --skip-crds' --file ${helmFileAbsPath} ${env} ${selectros} ${debug} ${helm}`;
       console.log(`helmfile exec command: ${command}`);
       HelmfileTemplateFileProvider.currentlyRendered = helmFileAbsPath;
 
