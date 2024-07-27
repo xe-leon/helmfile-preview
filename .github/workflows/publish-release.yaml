@@ -38,7 +38,7 @@ jobs:
           args: "publish --packagePath $PKG -p $VSCE_TOKEN"
         env:
           VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
-          PKG: "./${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}.vsix"
+          PKG: "./${{ env.PACKAGE_NAME }}.vsix"
 
       - name: Read Changelog
         id: changelog
