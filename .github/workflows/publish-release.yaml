@@ -58,4 +58,4 @@ jobs:
           body: ${{ steps.changelog.outputs.changes }}
           draft: false
           prerelease: false
-          files: ./${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}.vsix
+          files: ./${{ env.PACKAGE_NAME }}.vsix
