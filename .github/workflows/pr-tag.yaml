@@ -29,4 +29,4 @@ jobs:
         uses: anothrNick/github-tag-action@v1
         env:
           CUSTOM_TAG: "v${{ steps.version.outputs.version }}"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_PUSH_TAG }}
