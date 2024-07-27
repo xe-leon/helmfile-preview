@@ -3,6 +3,7 @@ import { SidebarProvider } from './providers/sidebarProvider';
 import { HelmfileTemplateFileProvider } from "./providers/helmfileTemplateFileProvider";
 import { openCurrentPreview } from './commands/openCurrentPreview';
 import { findFirstAndPreview } from './commands/findFirstAndPreview';
+import { getNonce } from "./utilities/getNonce";
 
 export function activate(context: vscode.ExtensionContext) {
   // Commands
@@ -20,41 +21,53 @@ export function activate(context: vscode.ExtensionContext) {
 
   vscode.workspace.onDidSaveTextDocument(
     async (doc) => {
-      if (doc.uri.fsPath === HelmfileTemplateFileProvider.currentlyRendered)
-        {
-          HelmfileTemplateFileProvider.render(doc.uri.fsPath);
-        }
+      if (HelmfileTemplateFileProvider.currentlyRendered.includes(doc.uri.fsPath))
+      {
+        HelmfileTemplateFileProvider.render(doc.uri.fsPath, undefined, undefined, undefined, getNonce());
+      }
     }
   );
 
   vscode.workspace.onDidCloseTextDocument(async event => {
-    if (event.uri.fsPath === HelmfileTemplateFileProvider.currentlyRendered) {
+    if (HelmfileTemplateFileProvider.currentlyRendered.includes(event.uri.fsPath)) {
       const previewTabGroup = vscode.window.tabGroups.all;
 
       let previewTab;
       let i = 0;
       while (!previewTab || previewTab.length === 0) {
         previewTab = previewTabGroup[i].tabs.filter(tab =>
-          (tab.input instanceof vscode.TabInputText) && (tab.input.uri.fsPath === HelmfileTemplateFileProvider.currentlyRendered) && (tab.input.uri.scheme === "htvf")
+          (tab.input instanceof vscode.TabInputText) && (HelmfileTemplateFileProvider.currentlyRendered.includes(tab.input.uri.fsPath)) && (tab.input.uri.scheme === "htvf")
         );
         i++;
       }
       await vscode.window.tabGroups.close(previewTab, false);
+      HelmfileTemplateFileProvider.currentlyRendered = "";
     }
   });
-  // vscode.window.onDidChangeActiveTextEditor(
-  // ! Troubled behavior
-  //   async (e) => {
-  //     const uri = vscode.Uri.parse(`${HelmfileTemplateFileProvider.scheme}://${e?.document.uri.fsPath}`);
-  //     const document = await vscode.workspace.openTextDocument(uri);
-  //     await vscode.window.showTextDocument(document, {
-  //       preview: true,
-  //       preserveFocus: true,
-  //       viewColumn: vscode.ViewColumn.Beside
-  //     });
-  //     vscode.languages.setTextDocumentLanguage(document, "yaml");
-  //   }
-  // );
+
+  const openEditors = new Set<string>();
+
+  context.subscriptions.push(vscode.window.onDidChangeVisibleTextEditors((editors) => {
+    const currentOpenEditors = new Set(editors.map(editor => editor.document.uri.toString()));
+
+    for (const uriString of openEditors) {
+      if (!currentOpenEditors.has(uriString)) {
+        if(uriString.startsWith(HelmfileTemplateFileProvider.scheme)){
+          HelmfileTemplateFileProvider.currentlyRendered = "";
+        }
+        openEditors.delete(uriString);
+      }
+    }
+
+    for (const uriString of currentOpenEditors) {
+      if (!openEditors.has(uriString)) {
+        if (uriString.startsWith(HelmfileTemplateFileProvider.scheme)) {
+          HelmfileTemplateFileProvider.currentlyRendered = uriString.replace(`${HelmfileTemplateFileProvider.scheme}:`, "");
+        }
+        openEditors.add(uriString);
+      }
+    }
+  }));
 
   //SidebarProvider
   const sidebarProvider = new SidebarProvider(context.extensionUri);
