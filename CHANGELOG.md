@@ -25,7 +25,7 @@ All notable changes to this project will be documented in this file.
 * Strip workspace folder from filenames in sidebar selector if there's only 1 opened workspace folder.
 * Implement support `gitignore` syntax for custom helmfile names.
 
-## 1.0.2 - 2024-07-02
+## [1.0.2] - 2024-07-02
 
 ### 🩹 Fixes
 
