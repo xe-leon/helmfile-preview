@@ -6,7 +6,8 @@
   "keywords": [
     "helm",
     "helmfile",
-    "helmfile-template"
+    "helmfile-template",
+    "kubeconform"
   ],
   "version": "1.2.0",
   "license": "LICENSE.md",
