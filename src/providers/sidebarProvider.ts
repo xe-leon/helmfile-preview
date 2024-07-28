@@ -3,6 +3,7 @@ import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
 import { findHelmfiles, findEnvironments, getCustomHelmfiles } from '../utilities/fsHelpers';
 import HelmfileTemplateFileProvider from "../providers/helmfileTemplateFileProvider";
+import Logger from "../utilities/logger";
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'helmfile-preview.sidebarView';
@@ -50,9 +51,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   public async _editorChange(editor?: vscode.TextEditor) {
     if (!this._view) {return;}
 
+    Logger.debug(`Looking for helmfiles in current project`);
     let mapHelmfiles = await findHelmfiles();
     if(vscode.workspace.workspaceFolders){
       vscode.workspace.workspaceFolders.forEach(workspaceFolder => {
+        Logger.debug(`Looking for custom-named helmfiles`);
         const customHelmfiles = getCustomHelmfiles(workspaceFolder.uri.fsPath+"/");
         if (customHelmfiles) {
           mapHelmfiles = new Map<string, string>([...mapHelmfiles.entries(), ...customHelmfiles.entries()]);
@@ -63,6 +66,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     const helmfiles = JSON.stringify(Object.fromEntries(mapHelmfiles));
     const selectedFile = editor?.document.uri.fsPath;
 
+    Logger.debug(`Updating selected helmfile in sidebar`);
     this._view.webview.postMessage({ command: 'updateFiles', map: helmfiles, selected: selectedFile });
 
     this._envUpdate(mapHelmfiles);
@@ -73,13 +77,16 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     let environments = new Set<string>(["default"]);
 
+    Logger.debug(`Getting list of environments from all helmfiles`);
     helmfiles.forEach(helmfile => {
       findEnvironments(helmfile).forEach(env => {
         environments = environments.add(env);
       });
     });
     const environmentsArray = Array.from(environments).sort();
+    Logger.debug(`Environments: ${environmentsArray.toString()}`);
 
+    Logger.debug(`Updating environment selector in sidebar`);
     this._view.webview.postMessage({ command: 'updateEnvs', map: environmentsArray, selected: HelmfileTemplateFileProvider.stateEnvironment });
   }
 
@@ -91,13 +98,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         const env = message.env;
         const selectors = message.selectors;
         const prerun = message.prerun;
+        Logger.info(`Received command from sidebar: ${command}`);
+        Logger.debug(`file=${file}, env=${env}, selectors=${selectors}, Pre-run commands=${prerun}`);
 
         switch (command) {
           case "render":
+            Logger.info(`Rendering helmfile`);
             HelmfileTemplateFileProvider.render(file, env, selectors, prerun, getNonce());
             return;
 
           case "selectEnv":
+            Logger.debug(`Saving selected environment`);
             HelmfileTemplateFileProvider.stateEnvironment = env;
             return;
         }

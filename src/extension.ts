@@ -3,12 +3,15 @@ import { SidebarProvider } from './providers/sidebarProvider';
 import { HelmfileTemplateFileProvider } from "./providers/helmfileTemplateFileProvider";
 import { openCurrentPreview } from './commands/openCurrentPreview';
 import { findFirstAndPreview } from './commands/findFirstAndPreview';
+import { runKubeconform } from './commands/runKubeconform';
 import { getNonce } from "./utilities/getNonce";
+import Logger from "./utilities/logger";
 
 export function activate(context: vscode.ExtensionContext) {
   // Commands
   context.subscriptions.push(vscode.commands.registerCommand('helmfile-preview.openCurrentPreview', openCurrentPreview));
   context.subscriptions.push(vscode.commands.registerCommand('helmfile-preview.findFirstAndPreview', findFirstAndPreview));
+  context.subscriptions.push(vscode.commands.registerCommand('helmfile-preview.runKubeconform', runKubeconform));
 
   // HelmfileProvider
   const helmfileProvider = new HelmfileTemplateFileProvider();
@@ -23,6 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
     async (doc) => {
       if (HelmfileTemplateFileProvider.currentlyRendered.includes(doc.uri.fsPath))
       {
+        Logger.debug('Document saved. Running re-render.');
         HelmfileTemplateFileProvider.render(doc.uri.fsPath, undefined, undefined, undefined, getNonce());
       }
     }
@@ -30,18 +34,23 @@ export function activate(context: vscode.ExtensionContext) {
 
   vscode.workspace.onDidCloseTextDocument(async event => {
     if (HelmfileTemplateFileProvider.currentlyRendered.includes(event.uri.fsPath)) {
+      Logger.debug('Document closed. Looking for preview tab.');
       const previewTabGroup = vscode.window.tabGroups.all;
 
       let previewTab;
       let i = 0;
-      while (!previewTab || previewTab.length === 0) {
+      while ((!previewTab || previewTab.length === 0) && i < previewTabGroup.length) {
         previewTab = previewTabGroup[i].tabs.filter(tab =>
           (tab.input instanceof vscode.TabInputText) && (HelmfileTemplateFileProvider.currentlyRendered.includes(tab.input.uri.fsPath)) && (tab.input.uri.scheme === "htvf")
         );
         i++;
       }
-      await vscode.window.tabGroups.close(previewTab, false);
-      HelmfileTemplateFileProvider.currentlyRendered = "";
+
+      if (previewTab) {
+        Logger.debug('Found tab with helmfile that was closed. Closing preview.');
+        await vscode.window.tabGroups.close(previewTab, false);
+        HelmfileTemplateFileProvider.currentlyRendered = "";
+      }
     }
   });
 

@@ -3,7 +3,7 @@ import * as path from "path";
 import * as querystring from 'querystring';
 import { execSync } from "child_process";
 import ConfigurationProvider from "./configurationProvider";
-
+import Logger from "../utilities/logger";
 
 export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentProvider {
   private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
@@ -29,11 +29,12 @@ export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentP
     const helmBinary = ConfigurationProvider.getConfigHelmBinary();
 
     if (!helmFileAbsPath) {
+      Logger.debug("No path given for helmfile rendering");
       return "To see the template preview, open the editor with a Helmfile";
     }
 
     if (!ConfigurationProvider.getConfigExtensions()?.includes(helmFileExtension)) {
-      console.error(`helmfile: unsupported file extension: ${helmFileExtension}`);
+      Logger.error(`Unsupported file extension: ${helmFileExtension}`);
       return "This file is not a Helmfile";
     }
 
@@ -42,15 +43,17 @@ export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentP
     if (stderr) {
       let { stdout: stdoutDebug, stderr: stderrDebug } = this.runHelmfileTemplate(helmFileAbsPath, args, true, helmfileBinary, helmBinary);
 
-      console.error(`helmfile: error during template: ${stderr.toString()}`);
-      vscode.window.showErrorMessage(`helmfile ${stderrDebug?.toString('utf8').split(/\n|\r/).filter(line => line.startsWith("err:"))}`);
+      Logger.error(stderr.toString());
+      vscode.window.showErrorMessage(`Helmfile Template failed!`);
 
-      return (`#Error while rendering your helmfile.
-#There might be an error somewhere in your helmfile.
-#See the error message popped up for details.
-#The output of render with --debug flag is listed below.
+      return (`# Error while rendering your helmfile.
+# There might be an error somewhere in your helmfile.
+# The output of render with --debug flag is listed below.
+# ============== Standard output ==============
 
-` + stdoutDebug.toString() + (stderrDebug !== undefined ? stderrDebug.toString() : ""));
+` + stdoutDebug.toString() + `
+# ============== Debug output ==============
+` + (stderrDebug !== undefined ? stderrDebug.toString() : ""));
 
     }
 
@@ -76,7 +79,7 @@ export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentP
 
     try {
       const command = `${prerun}${helmfileBinary} template --args='--no-hooks --skip-crds' --file ${helmFileAbsPath} ${env} ${selectros} ${debug} ${helm}`;
-      console.log(`helmfile exec command: ${command}`);
+      Logger.info(`Executing command ${command}`);
       HelmfileTemplateFileProvider.currentlyRendered = helmFileAbsPath;
 
       const stdout = execSync(command);
@@ -93,6 +96,7 @@ export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentP
     if (!selectors || selectors === "") {selectors = undefined;}
     if (!prerun || prerun === "") {prerun = undefined;}
 
+    Logger.debug(`Rendering URI: ${HelmfileTemplateFileProvider.scheme}://${file}?environment=${env}&selectors=${selectors}&prerun=${prerun}&random=${random}`);
     const uri = vscode.Uri.parse(`${HelmfileTemplateFileProvider.scheme}://${file}?environment=${env}&selectors=${selectors}&prerun=${prerun}&random=${random}`);
     const document = await vscode.workspace.openTextDocument(uri);
     await vscode.window.showTextDocument(document, {

@@ -12,6 +12,7 @@ Generally based on [helm-template-preview-and-more](https://github.com/Nestsiare
 ## Features
 
 ### Run a command
+
 Render currently opened helmfile, or just let it find helmfile and render it.
 
 ![Open preview via command palette](media/demo/helmfile-command.gif)
@@ -36,6 +37,12 @@ If you want to be more precise, you can open a sidebar to choose specific enviro
 
 ![Precise settings in sidebar](media/demo/helmfile-sidebar.gif)
 
+### Validate rendered manifests with kubeconform
+
+Run kubeconform against rendered preview.
+
+![Kubeconform against rendered manifests](media/demo/kubeconform.gif)
+
 ### Filters for non-default named helmfiles
 
 You can specify filter for filenames or whole folders in `helmfile-preview.customNameFilter` setting. They will appear in sidebar selector.
@@ -48,6 +55,8 @@ Example:
 ## Requirements
 
 You need to have both [helmfile](https://helmfile.readthedocs.io/en/latest/#installation) and [helm](https://helm.sh/docs/intro/install/) binaries installed in your PATH (or executable specified in settings).
+
+Optional: Install [kubeconform](https://github.com/yannh/kubeconform).
 
 > [!TIP]
 > If your helmfile references chart in **private** repository, you need to log in with `helm registry login`.
@@ -64,14 +73,19 @@ To run any command, open command palette: `Ctrl` + `Shift` + `P` (Windows) / `Sh
 
 This extension contributes the following settings:
 
-| **Parameter**                         | **Description**                                                       | **Default value** |
-|---------------------------------------|-----------------------------------------------------------------------|-------------------|
-| `helmfile-preview.fileNames`          | Names of files that will be automatically searched as helmfile        | `helmfile`        |
-| `helmfile-preview.customNameFilter`   | Filters for custom Helmfile names (GitIgnore syntax)                  |                   |
-| `helmfile-preview.fileExtensions`     | Extensions of files that are counted as helmfile                      | `*.yaml,*.yml`    |
-| `helmfile-preview.environment`        | Default environment to choose                                         | `default`         |
-| `helmfile-preview.helmfileExecutable` | Path to `helmfile` executable                                         | `helmfile`        |
-| `helmfile-preview.helmExecutable`     | Path to `helm` executable                                             | `helm`            |
+| **Parameter**                                        | **Description**                                                       | **Default value** |
+|------------------------------------------------------|-----------------------------------------------------------------------|-------------------|
+| `helmfile-preview.fileNames`                         | Names of files that will be automatically searched as helmfile        | `helmfile`        |
+| `helmfile-preview.customNameFilter`                  | Filters for custom Helmfile names (GitIgnore syntax)                  |                   |
+| `helmfile-preview.fileExtensions`                    | Extensions of files that are counted as helmfile                      | `*.yaml,*.yml`    |
+| `helmfile-preview.environment`                       | Default environment to choose                                         | `default`         |
+| `helmfile-preview.kubernetesVersion`                 | Kubernetes cluster version for Kubeconform                            | `1.29.1`          |
+| `helmfile-preview.kubeConformStrictValidation`       | Enable strict validation in kubeconform                               | `true`            |
+| `helmfile-preview.kubeConformIgnoreMissingSchemas`   | Ignore missing schemas while validation                               | `false`           |
+| `helmfile-preview.kubeConformSchemas`                | List of schema locations for kubeconform                              | `default`, `https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json`         |
+| `helmfile-preview.helmfileExecutable`                | Path to `helmfile` executable                                         | `helmfile`        |
+| `helmfile-preview.helmExecutable`                    | Path to `helm` executable                                             | `helm`            |
+| `helmfile-preview.logLevel`                          | Log level (0..4)                                                      | `1` (Errors only) |
 
 ## Contribute
 
@@ -82,7 +96,6 @@ I'm not a typescript programmer, so the code might be inefficient, weird or not-
 ## TODO
 
 * Fix random close of preview sometimes.
-* Integrate kubeconform.
 
 ## Release Notes
 
