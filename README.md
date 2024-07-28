@@ -12,6 +12,7 @@ Generally based on [helm-template-preview-and-more](https://github.com/Nestsiare
 ## Features
 
 ### Run a command
+
 Render currently opened helmfile, or just let it find helmfile and render it.
 
 ![Open preview via command palette](media/demo/helmfile-command.gif)
@@ -72,19 +73,19 @@ To run any command, open command palette: `Ctrl` + `Shift` + `P` (Windows) / `Sh
 
 This extension contributes the following settings:
 
-| **Parameter**                         | **Description**                                                       | **Default value** |
-|---------------------------------------|-----------------------------------------------------------------------|-------------------|
-| `helmfile-preview.fileNames`                     | Names of files that will be automatically searched as helmfile                 | `helmfile`        |
-| `helmfile-preview.customNameFilter`              | Filters for custom Helmfile names (GitIgnore syntax)                  |                   |
-| `helmfile-preview.fileExtensions`                | Extensions of files that are counted as helmfile                      | `*.yaml,*.yml`    |
-| `helmfile-preview.environment`                   | Default environment to choose                                         | `default`         |
-| `helmfile-preview.kubernetesVersion`             | Kubernetes cluster version for Kubeconform                                         | `1.29.1`         |
-| `helmfile-preview.kubeConformStrictValidation`   | Enable strict validation in kubeconform                                         | `true`         |
-| `helmfile-preview.kubeConformIgnoreMissingSchemas`   | Ignore missing schemas while validation                                         | `false`         |
-| `helmfile-preview.kubeConformSchemas`            | List of schema locations for kubeconform                                         | `default`, `https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json`         |
-| `helmfile-preview.helmfileExecutable`            | Path to `helmfile` executable                                         | `helmfile`        |
-| `helmfile-preview.helmExecutable`                | Path to `helm` executable                                             | `helm`            |
-| `helmfile-preview.logLevel`                      | Log level (0..4)                                                      | `1` (Errors only)     |
+| **Parameter**                                        | **Description**                                                       | **Default value** |
+|------------------------------------------------------|-----------------------------------------------------------------------|-------------------|
+| `helmfile-preview.fileNames`                         | Names of files that will be automatically searched as helmfile        | `helmfile`        |
+| `helmfile-preview.customNameFilter`                  | Filters for custom Helmfile names (GitIgnore syntax)                  |                   |
+| `helmfile-preview.fileExtensions`                    | Extensions of files that are counted as helmfile                      | `*.yaml,*.yml`    |
+| `helmfile-preview.environment`                       | Default environment to choose                                         | `default`         |
+| `helmfile-preview.kubernetesVersion`                 | Kubernetes cluster version for Kubeconform                            | `1.29.1`          |
+| `helmfile-preview.kubeConformStrictValidation`       | Enable strict validation in kubeconform                               | `true`            |
+| `helmfile-preview.kubeConformIgnoreMissingSchemas`   | Ignore missing schemas while validation                               | `false`           |
+| `helmfile-preview.kubeConformSchemas`                | List of schema locations for kubeconform                              | `default`, `https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json`         |
+| `helmfile-preview.helmfileExecutable`                | Path to `helmfile` executable                                         | `helmfile`        |
+| `helmfile-preview.helmExecutable`                    | Path to `helm` executable                                             | `helm`            |
+| `helmfile-preview.logLevel`                          | Log level (0..4)                                                      | `1` (Errors only) |
 
 ## Contribute
 
