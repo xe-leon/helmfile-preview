@@ -39,6 +39,12 @@ export class ConfigurationProvider {
       | true;
   }
 
+  public static getConfigIgnoreMissingSchemas() {
+    return ConfigurationProvider.configuration.get("kubeConformIgnoreMissingSchemas") as
+      | boolean
+      | false;
+  }
+
   public static getConfigSchemaLocations() {
     return ConfigurationProvider.configuration.get("kubeConformSchemas") as
       | string[]

@@ -80,6 +80,7 @@ This extension contributes the following settings:
 | `helmfile-preview.environment`                   | Default environment to choose                                         | `default`         |
 | `helmfile-preview.kubernetesVersion`             | Kubernetes cluster version for Kubeconform                                         | `1.29.1`         |
 | `helmfile-preview.kubeConformStrictValidation`   | Enable strict validation in kubeconform                                         | `true`         |
+| `helmfile-preview.kubeConformIgnoreMissingSchemas`   | Ignore missing schemas while validation                                         | `false`         |
 | `helmfile-preview.kubeConformSchemas`            | List of schema locations for kubeconform                                         | `default`, `https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json`         |
 | `helmfile-preview.helmfileExecutable`            | Path to `helmfile` executable                                         | `helmfile`        |
 | `helmfile-preview.helmExecutable`                | Path to `helm` executable                                             | `helm`            |

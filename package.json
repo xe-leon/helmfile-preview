@@ -133,11 +133,17 @@
           "helmfile-preview.kubeConformStrictValidation": {
             "order": 5,
             "type": "boolean",
-            "default": "true",
+            "default": true,
             "description": "Enable strict validation in kubeconform"
           },
-          "helmfile-preview.kubeConformSchemas": {
+          "helmfile-preview.kubeConformIgnoreMissingSchemas": {
             "order": 6,
+            "type": "boolean",
+            "default": false,
+            "description": "Ignore missing schemas"
+          },
+          "helmfile-preview.kubeConformSchemas": {
+            "order": 7,
             "type": "array",
             "default": [
               "default",

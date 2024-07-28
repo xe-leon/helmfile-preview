@@ -6,10 +6,11 @@ import Logger from "../utilities/logger";
 export function runKubeconform() {
   const kubeVersion = "--kubernetes-version=" + ConfigurationProvider.getConfigKubeVersion();
   const strictValidation = ConfigurationProvider.getConfigStrictConform() ? "--strict" : "";
+  const ignoreMissingSchemas = ConfigurationProvider.getConfigIgnoreMissingSchemas() ? "-ignore-missing-schemas" : "";
   const schema = ConfigurationProvider.getConfigSchemaLocations();
   const stdin = vscode.window.activeTextEditor?.document.getText();
   const schemasArg = schema.map((i) => `--schema-location "${i}" `).join(" ");
-  const command = `kubeconform ${strictValidation} ${kubeVersion} ${schemasArg} -n 16 -summary -output json`;
+  const command = `kubeconform ${strictValidation} ${ignoreMissingSchemas} ${kubeVersion} ${schemasArg} -n 16 -summary -output json`;
 
   try {
     const output = execSync(command, {input: stdin});
