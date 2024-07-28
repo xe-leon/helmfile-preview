@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2024-07-28
+
+### 🚀 Features
+
+* Add kubeconform integration to validate rendered manifests.
+
+* Enhance logging.
+
 ## [1.1.3] - 2024-07-28
 
 ### 🩹 Fixes
