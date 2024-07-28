@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import * as yaml from 'yaml';
 import ignore, { Ignore } from 'ignore';
 import ConfigurationProvider from "../providers/configurationProvider";
+import Logger from './logger';
 
 export function getCustomHelmfiles(rootDir: string): Map<string, string> | undefined {
   const ignoreTemplates = ConfigurationProvider.getConfigNamesFilter();
@@ -23,6 +24,7 @@ function getFilesFiltered(rootPath: string, ig: Ignore, igRootDir: string, fileL
         getFilesFiltered(filePath, ig, igRootDir, fileList);
       } else {
         if (ig.ignores(filePath.replace(igRootDir, ""))){
+          Logger.debug(`Found custom-named helmfile: ${filePath}`);
           fileList.push(filePath);
         }
       }
@@ -40,6 +42,7 @@ export function findEnvironments(filePath: string): string[] {
   helmfiles.forEach(helmfileContent => {
     if (helmfileContent.environments) {
       Object.keys(helmfileContent.environments).forEach(envName => {
+        Logger.debug(`Found environment: ${envName}`);
         environments.push(envName);
       });
     }

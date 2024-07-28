@@ -12,6 +12,8 @@ export function runKubeconform() {
   const schemasArg = schema.map((i) => `--schema-location "${i}" `).join(" ");
   const command = `kubeconform ${strictValidation} ${ignoreMissingSchemas} ${kubeVersion} ${schemasArg} -n 16 -summary -output json`;
 
+  Logger.info(`Executing command ${command}`);
+  Logger.debug(`stdin for command:\n ${stdin}`);
   try {
     const output = execSync(command, {input: stdin});
     reportResult(output);
