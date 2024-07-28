@@ -8,7 +8,7 @@
     "helmfile",
     "helmfile-template"
   ],
-  "version": "1.1.3",
+  "version": "1.2.0",
   "license": "LICENSE.md",
   "icon": "media/helmfile.png",
   "engines": {
@@ -38,6 +38,15 @@
         "command": "helmfile-preview.findFirstAndPreview",
         "category": "Helmfile",
         "title": "Find helmfile in workspace and render preview"
+      },
+      {
+        "command": "helmfile-preview.runKubeconform",
+        "category": "Helmfile",
+        "title": "Run kubeconform with opened file",
+        "icon": {
+          "dark": "./media/icon-kubeconform-dark.svg",
+          "light": "./media/icon-kubeconform-light.svg"
+        }
       }
     ],
     "menus": {
@@ -45,6 +54,11 @@
         {
           "command": "helmfile-preview.openCurrentPreview",
           "when": "resourcePath =~ /\\S+\\.(yaml|yml)/ && !(resourcePath =~ /.*templates.*/)",
+          "group": "navigation"
+        },
+        {
+          "command": "helmfile-preview.runKubeconform",
+          "when": "resourcePath =~ /\\S+\\.(yaml|yml)/",
           "group": "navigation"
         }
       ]
@@ -110,6 +124,33 @@
             "default": "default",
             "description": "Default environment to choose"
           },
+          "helmfile-preview.kubernetesVersion": {
+            "order": 4,
+            "type": "string",
+            "default": "1.29.1",
+            "description": "Kubernetes cluster version for Kubeconform"
+          },
+          "helmfile-preview.kubeConformStrictValidation": {
+            "order": 5,
+            "type": "boolean",
+            "default": "true",
+            "description": "Enable strict validation in kubeconform"
+          },
+          "helmfile-preview.kubeConformSchemas": {
+            "order": 6,
+            "type": "array",
+            "default": [
+              "default",
+              "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
+            ],
+            "description": "List of schema locations for kubeconform"
+          },
+          "helmfile-preview.logLevel": {
+            "order": 97,
+            "type": "number",
+            "default": "1",
+            "description": "Logging level"
+          },
           "helmfile-preview.helmfileExecutable": {
             "order": 98,
             "type": "string",
@@ -123,6 +164,21 @@
             "description": "Path to `helm` executable"
           }
         }
+      }
+    ],
+    "languages": [
+      {
+        "id": "code-output",
+        "mimetypes": [
+          "text/x-code-output"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "code-output",
+        "scopeName": "code.output",
+        "path": "./syntaxes/code-output.tmLanguage"
       }
     ]
   },

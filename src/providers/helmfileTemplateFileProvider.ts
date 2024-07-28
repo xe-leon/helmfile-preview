@@ -3,6 +3,7 @@ import * as path from "path";
 import * as querystring from 'querystring';
 import { execSync } from "child_process";
 import ConfigurationProvider from "./configurationProvider";
+import Logger from "../utilities/logger";
 
 
 export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentProvider {
@@ -33,7 +34,7 @@ export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentP
     }
 
     if (!ConfigurationProvider.getConfigExtensions()?.includes(helmFileExtension)) {
-      console.error(`helmfile: unsupported file extension: ${helmFileExtension}`);
+      Logger.error(`Unsupported file extension: ${helmFileExtension}`);
       return "This file is not a Helmfile";
     }
 
@@ -42,7 +43,7 @@ export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentP
     if (stderr) {
       let { stdout: stdoutDebug, stderr: stderrDebug } = this.runHelmfileTemplate(helmFileAbsPath, args, true, helmfileBinary, helmBinary);
 
-      console.error(`helmfile: error during template: ${stderr.toString()}`);
+      Logger.error(`During rendering: ${stderr.toString()}`);
       vscode.window.showErrorMessage(`helmfile ${stderrDebug?.toString('utf8').split(/\n|\r/).filter(line => line.startsWith("err:"))}`);
 
       return (`#Error while rendering your helmfile.
@@ -76,7 +77,7 @@ export class HelmfileTemplateFileProvider implements vscode.TextDocumentContentP
 
     try {
       const command = `${prerun}${helmfileBinary} template --args='--no-hooks --skip-crds' --file ${helmFileAbsPath} ${env} ${selectros} ${debug} ${helm}`;
-      console.log(`helmfile exec command: ${command}`);
+      Logger.info(`Exec command: ${command}`);
       HelmfileTemplateFileProvider.currentlyRendered = helmFileAbsPath;
 
       const stdout = execSync(command);
