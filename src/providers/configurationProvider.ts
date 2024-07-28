@@ -27,6 +27,30 @@ export class ConfigurationProvider {
       | "default";
   }
 
+  public static getConfigKubeVersion() {
+    return ConfigurationProvider.configuration.get("kubernetesVersion") as
+      | string
+      | "1.29.1";
+  }
+
+  public static getConfigStrictConform() {
+    return ConfigurationProvider.configuration.get("kubeConformStrictValidation") as
+      | boolean
+      | true;
+  }
+
+  public static getConfigSchemaLocations() {
+    return ConfigurationProvider.configuration.get("kubeConformSchemas") as
+      | string[]
+    | ["default", "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"];
+  }
+
+  public static getConfigLogLevel() {
+    return ConfigurationProvider.configuration.get("logLevel") as
+      | number
+      | 0;
+  }
+
   public static getConfigHelmfileBinary() {
     return ConfigurationProvider.configuration.get("helmfileExecutable") as
       | string

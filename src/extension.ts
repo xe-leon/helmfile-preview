@@ -3,12 +3,14 @@ import { SidebarProvider } from './providers/sidebarProvider';
 import { HelmfileTemplateFileProvider } from "./providers/helmfileTemplateFileProvider";
 import { openCurrentPreview } from './commands/openCurrentPreview';
 import { findFirstAndPreview } from './commands/findFirstAndPreview';
+import { runKubeconform } from './commands/runKubeconform';
 import { getNonce } from "./utilities/getNonce";
 
 export function activate(context: vscode.ExtensionContext) {
   // Commands
   context.subscriptions.push(vscode.commands.registerCommand('helmfile-preview.openCurrentPreview', openCurrentPreview));
   context.subscriptions.push(vscode.commands.registerCommand('helmfile-preview.findFirstAndPreview', findFirstAndPreview));
+  context.subscriptions.push(vscode.commands.registerCommand('helmfile-preview.runKubeconform', runKubeconform));
 
   // HelmfileProvider
   const helmfileProvider = new HelmfileTemplateFileProvider();
