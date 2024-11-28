@@ -1,7 +1,7 @@
 environments:
-  aws.production:
-  aws.staging:
-  aws.dev:
+  aws.production: {}
+  aws.staging: {}
+  aws.dev: {}
 
 ---
 bases:

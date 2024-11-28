@@ -1,5 +1,5 @@
 environments:
-  default:
+  default: {}
 
 ---
 bases:
