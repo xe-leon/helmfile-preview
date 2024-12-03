@@ -11,8 +11,11 @@ updates:
       interval: weekly
     labels:
       - 'ci'
-    reviewers:
-      - 'xe-leon'
+    groups:
+      ci-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "*"
 
   - package-ecosystem: npm
     directory: '/'
@@ -20,5 +23,8 @@ updates:
       interval: weekly
     labels:
       - 'dependencies'
-    reviewers:
-      - 'xe-leon'
+    groups:
+      dev-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "*"
